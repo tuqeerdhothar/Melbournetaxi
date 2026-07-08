@@ -7,42 +7,52 @@
 
 <style>
 body{
-    font-family:Arial, sans-serif;
-    background:#f5f5f5;
+    font-family:Arial,sans-serif;
+    background:#f2f2f2;
     margin:0;
+    padding:20px;
 }
+
 .container{
-    max-width:450px;
-    margin:30px auto;
+    max-width:500px;
+    margin:auto;
     background:#fff;
     padding:20px;
     border-radius:10px;
-    box-shadow:0 0 10px rgba(0,0,0,.15);
+    box-shadow:0 2px 10px rgba(0,0,0,.2);
 }
+
 h2{
     text-align:center;
 }
-input, select, textarea{
+
+label{
+    font-weight:bold;
+}
+
+input,select,textarea{
     width:100%;
-    padding:12px;
-    margin-top:8px;
+    padding:10px;
+    margin-top:5px;
     margin-bottom:15px;
     border:1px solid #ccc;
-    border-radius:6px;
+    border-radius:5px;
     box-sizing:border-box;
 }
+
 button{
     width:100%;
     padding:14px;
     background:#000;
     color:#fff;
-    border:none;
-    border-radius:6px;
     font-size:16px;
+    border:none;
+    border-radius:5px;
     cursor:pointer;
 }
+
 button:hover{
-    background:#333;
+    background:#444;
 }
 </style>
 
@@ -54,45 +64,68 @@ button:hover{
 
 <h2>🚖 Melbourne Cabs Booking</h2>
 
-<form action="https://formsubmit.co/your@email.com" method="POST">
-
 <label>Full Name</label>
-<input type="text" name="Name" required>
+<input type="text" id="name">
 
-<label>Mobile Number</label>
-<input type="tel" name="Phone" required>
+<label>Phone Number</label>
+<input type="tel" id="phone">
 
 <label>Pickup Address</label>
-<input type="text" name="Pickup" required>
+<input type="text" id="pickup">
 
 <label>Destination</label>
-<input type="text" name="Destination" required>
+<input type="text" id="dropoff">
 
 <label>Pickup Date & Time</label>
-<input type="datetime-local" name="Pickup Time" required>
+<input type="datetime-local" id="time">
 
-<label>Vehicle Type</label>
-<select name="Vehicle">
+<label>Vehicle</label>
+<select id="vehicle">
 <option>Sedan</option>
 <option>SUV</option>
 <option>Maxi Taxi</option>
 <option>Silver Service</option>
-<option>Wheelchair Taxi</option>
 </select>
 
-<label>Flight Number (Optional)</label>
-<input type="text" name="Flight">
-
 <label>Notes</label>
-<textarea name="Notes" rows="4"></textarea>
+<textarea id="notes"></textarea>
 
-<button type="submit">
-Book Taxi
-</button>
-
-</form>
+<button onclick="bookTaxi()">Book via WhatsApp</button>
 
 </div>
+
+<script>
+
+function bookTaxi(){
+
+var name=document.getElementById("name").value;
+var phone=document.getElementById("phone").value;
+var pickup=document.getElementById("pickup").value;
+var dropoff=document.getElementById("dropoff").value;
+var time=document.getElementById("time").value;
+var vehicle=document.getElementById("vehicle").value;
+var notes=document.getElementById("notes").value;
+
+if(name=="" || phone=="" || pickup=="" || dropoff==""){
+    alert("Please complete all required fields.");
+    return;
+}
+
+var message=
+"🚖 NEW TAXI BOOKING%0A%0A"+
+"Name: "+encodeURIComponent(name)+"%0A"+
+"Phone: "+encodeURIComponent(phone)+"%0A"+
+"Pickup: "+encodeURIComponent(pickup)+"%0A"+
+"Destination: "+encodeURIComponent(dropoff)+"%0A"+
+"Pickup Time: "+encodeURIComponent(time)+"%0A"+
+"Vehicle: "+encodeURIComponent(vehicle)+"%0A"+
+"Notes: "+encodeURIComponent(notes);
+
+window.open("https://wa.me/61412345678?text="+message,"_blank");
+
+}
+
+</script>
 
 </body>
 </html>
