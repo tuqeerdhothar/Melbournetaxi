@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taxi Dispatch System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-reset {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-reset:hover {
+            background: #e0e0e0;
+        }
+
+        .success-message {
+            display: none;
+            background: #4caf50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .error-message {
+            display: none;
+            background: #f44336;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .info-box {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚕 Taxi Dispatch System</h1>
+            <p>Book your ride now</p>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            ✓ Booking confirmed! Driver will receive details via WhatsApp shortly.
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <form id="bookingForm">
+            <!-- Passenger Info -->
+            <div class="form-group">
+                <label for="passengerName">Passenger Name *</label>
+                <input type="text" id="passengerName" name="passengerName" required placeholder="Enter your full name">
+            </div>
+
+            <div class="form-group">
+                <label for="passengerPhone">Phone Number *</label>
+                <input type="tel" id="passengerPhone" name="passengerPhone" required placeholder="+1 (555) 000-0000">
+            </div>
+
+            <!-- Location Info -->
+            <div class="form-group">
+                <label for="pickupLocation">Pickup Location *</label>
+                <input type="text" id="pickupLocation" name="pickupLocation" required placeholder="Enter pickup address">
+            </div>
+
+            <div class="form-group">
+                <label for="dropoffLocation">Dropoff Location *</label>
+                <input type="text" id="dropoffLocation" name="dropoffLocation" required placeholder="Enter destination address">
+            </div>
+
+            <!-- Date & Time -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="rideDate">Date *</label>
+                    <input type="date" id="rideDate" name="rideDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="rideTime">Time *</label>
+                    <input type="time" id="rideTime" name="rideTime" required>
+                </div>
+            </div>
+
+            <!-- Taxi Type -->
+            <div class="form-group">
+                <label for="taxiType">Taxi Type *</label>
+                <select id="taxiType" name="taxiType" required>
+                    <option value="">Select taxi type</option>
+                    <option value="Economy">Economy - $10/km</option>
+                    <option value="Comfort">Comfort - $12/km</option>
+                    <option value="Premium">Premium - $15/km</option>
+                </select>
+            </div>
+
+            <!-- Passengers -->
+            <div class="form-group">
+                <label for="passengers">Number of Passengers *</label>
+                <input type="number" id="passengers" name="passengers" min="1" max="6" required placeholder="1">
+            </div>
+
+            <!-- Special Requests -->
+            <div class="form-group">
+                <label for="specialRequests">Special Requests (Optional)</label>
+                <textarea id="specialRequests" name="specialRequests" placeholder="Any special requests? (e.g., extra luggage, pet, wheelchair accessible)"></textarea>
+            </div>
+
+            <!-- Driver Contact -->
+            <div class="form-group">
+                <label for="driverPhone">Driver's WhatsApp Number *</label>
+                <input type="tel" id="driverPhone" name="driverPhone" required placeholder="+1 (555) 111-1111">
+            </div>
+
+            <!-- Buttons -->
+            <div class="button-group">
+                <button type="submit" class="btn-submit">📱 Book & Send to WhatsApp</button>
+                <button type="reset" class="btn-reset">Clear Form</button>
+            </div>
+
+            <div class="info-box">
+                <strong>ℹ️ How it works:</strong><br>
+                • Fill in all details<br>
+                • Click "Book & Send to WhatsApp"<br>
+                • A WhatsApp link will open with your booking details<br>
+                • Driver will confirm receipt and pickup time
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('rideDate').setAttribute('min', today);
+
+        // Form submission
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Get form values
+            const passengerName = document.getElementById('passengerName').value;
+            const passengerPhone = document.getElementById('passengerPhone').value;
+            const pickupLocation = document.getElementById('pickupLocation').value;
+            const dropoffLocation = document.getElementById('dropoffLocation').value;
+            const rideDate = document.getElementById('rideDate').value;
+            const rideTime = document.getElementById('rideTime').value;
+            const taxiType = document.getElementById('taxiType').value;
+            const passengers = document.getElementById('passengers').value;
+            const specialRequests = document.getElementById('specialRequests').value;
+            const driverPhone = document.getElementById('driverPhone').value;
+
+            // Validate phone numbers
+            if (!validatePhone(passengerPhone) || !validatePhone(driverPhone)) {
+                showError('Please enter valid phone numbers');
+                return;
+            }
+
+            // Create booking message
+            const bookingMessage = createBookingMessage(
+                passengerName,
+                passengerPhone,
+                pickupLocation,
+                dropoffLocation,
+                rideDate,
+                rideTime,
+                taxiType,
+                passengers,
+                specialRequests
+            );
+
+            // Send to WhatsApp
+            sendToWhatsApp(driverPhone, bookingMessage);
+        });
+
+        function validatePhone(phone) {
+            // Simple phone validation - accepts various formats
+            const phoneRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+            return phoneRegex.test(phone.replace(/\s/g, ''));
+        }
+
+        function createBookingMessage(name, phone, pickup, dropoff, date, time, type, passengers, requests) {
+            let message = `🚕 *NEW TAXI BOOKING*\n\n`;
+            message += `👤 *Passenger:* ${name}\n`;
+            message += `📱 *Phone:* ${phone}\n`;
+            message += `📍 *Pickup:* ${pickup}\n`;
+            message += `🎯 *Dropoff:* ${dropoff}\n`;
+            message += `📅 *Date:* ${date}\n`;
+            message += `⏰ *Time:* ${time}\n`;
+            message += `🚗 *Taxi Type:* ${type}\n`;
+            message += `👥 *Passengers:* ${passengers}\n`;
+            
+            if (requests) {
+                message += `📝 *Special Requests:* ${requests}\n`;
+            }
+            
+            message += `\n✅ Please confirm pickup time and vehicle details.`;
+            
+            return message;
+        }
+
+        function sendToWhatsApp(phone, message) {
+            // Remove special characters and spaces from phone number
+            const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
+            
+            // Encode message for URL
+            const encodedMessage = encodeURIComponent(message);
+            
+            // Create WhatsApp URL
+            const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+            
+            // Show success message
+            showSuccess();
+            
+            // Open WhatsApp (with small delay to show success message)
+            setTimeout(() => {
+                window.open(whatsappUrl, '_blank');
+            }, 500);
+
+            // Reset form after 2 seconds
+            setTimeout(() => {
+                document.getElementById('bookingForm').reset();
+                hideSuccess();
+            }, 3000);
+        }
+
+        function showSuccess() {
+            const successMsg = document.getElementById('successMessage');
+            successMsg.style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        function hideSuccess() {
+            document.getElementById('successMessage').style.display = 'none';
+        }
+
+        function showError(message) {
+            const errorMsg = document.getElementById('errorMessage');
+            errorMsg.textContent = '❌ ' + message;
+            errorMsg.style.display = 'block';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
